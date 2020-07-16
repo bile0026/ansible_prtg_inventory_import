@@ -23,34 +23,24 @@ except ImportError:
     import simplejson as json
 
 
-try:
-    f = open("prtg.ini")
-    f.close()
-    # Do something with the file
-    config_file = 'prtg.ini'
+config_file = 'prtg.ini'
 
-    # Read in configuration variables
-    config = configparser.ConfigParser()
-    config.readfp(open(config_file))
+# Read in configuration variables
+config = configparser.ConfigParser()
+config.readfp(open(config_file))
 
-    # PRTG Server IP or DNS/hostname
-    server = config.get('prtg', 'prtg_server')
-    # PRTG Username
-    user = config.get('prtg', 'prtg_user')
-    # PRTG Password
-    password = config.get('prtg', 'prtg_passhash')
-    # PRTG Tag
-    tag = config.get('prtg', 'prtg_tag')
-    # Field for groups
-    groupField = 'GroupName'
-    # Field for host
-    hostField = 'SysName'
-except IOError:
-    server = "server"
-    user = "user"
-    password = "passhash"
-    tag = "tag"
-    print(".ini not accessible, using provided vars here:" + server + user)
+# PRTG Server IP or DNS/hostname
+server = config.get('prtg', 'prtg_server')
+# PRTG Username
+user = config.get('prtg', 'prtg_user')
+# PRTG Password
+password = config.get('prtg', 'prtg_passhash')
+# PRTG Tag
+tag = config.get('prtg', 'prtg_tag')
+# Field for groups
+groupField = 'GroupName'
+# Field for host
+hostField = 'SysName'
 
 # string to be attached to the server url on what to pull back from PRTG.
 search_payload = "content=devices&columns=objid,device,status,name,active,host,group,tags&filter_tags=@tag("+tag+")&username="+user+"&passhash="+password+""
