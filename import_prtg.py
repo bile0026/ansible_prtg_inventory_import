@@ -67,7 +67,7 @@ req = requests.get(api_search_string, params=search_payload, headers=headers, ve
 jsonget = req.json()
 devices = jsonget["devices"]
 
-use_groups = False
+#use_groups = False
 
 class prtgInventory(object):
     #CLI parameters
@@ -84,9 +84,9 @@ class prtgInventory(object):
         # Called with `--list`.
         if self.args.list:
             self.inventory = self.get_list()
-            if use_groups:
-                self.groups = self.get_groups()
-                self.add_groups_to_hosts(self.groups)
+            # if use_groups:
+            #     self.groups = self.get_groups()
+            #     self.add_groups_to_hosts(self.groups)
         # Called with `--host [hostname]`.
         elif self.args.host:
             # Not implemented, since we return _meta info `--list`.
