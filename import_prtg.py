@@ -1,9 +1,9 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 
 '''
 Custom dynamic inventory script for Ansible and PRTG, in Python.
-This was tested on Python 3.8.6, PRTG 16.1.21.1924, and Ansible  2.9.10.
+This was tested on Python 3.6.8, PRTG 16.1.21.1924, and Ansible  2.9.10.
 Zachary Biles (zacharybiles@gmail.com)
 https://github.com/bile0026/
 
