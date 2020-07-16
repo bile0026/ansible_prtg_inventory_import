@@ -50,17 +50,8 @@ url = "https://"+server+"/api/table.json?"
 api_search_string = url + search_payload
 req = requests.get(api_search_string, params=search_payload, headers=headers, verify=False)
 
-#print(api_search_string)
-#print(req.text)
-
 jsonget = req.json()
 devices = jsonget["devices"]
-
-#print(jsonget.values())
-#print(devices)
-
-# for a in devices:
-#     print(a["host"]+" "+ a["name"])
 
 use_groups = False
 
@@ -115,28 +106,6 @@ class prtgInventory(object):
                     final_dict[m["group"]] = {'hosts': [m["name"]]}
         return final_dict
 
-#             #if self.args.groups:
-#     def get_groups(self):
-#         req = requests.get(url, params=group_payload, verify=False, auth=(user, password))
-#         hostsData = req.json()
-#         data_dump = eval(json.dumps(hostsData))
-
-#         parentField = 'ParentGroupName'
-#         childField = 'ChildGroupName'
-#         final_dict = {}
-#         for m in data_dump['results']:
-#             # Allow Upper/lower letters and numbers. Replace everything else with underscore
-#             m[parentField] = self.clean_inventory_item(m[parentField])
-#             m[childField] = self.clean_inventory_item(m[childField])
-#             if m[parentField] in final_dict:
-#                 final_dict[m[parentField]]['children'].append(m[childField])
-#             else:
-#                 final_dict[m[parentField]] = {'children': [m[childField]]}
-#         return final_dict
-
-
-#     def add_groups_to_hosts (self, groups):
-#         self.inventory.update(groups)
 
     @staticmethod
     def clean_inventory_item(item):
