@@ -52,14 +52,14 @@ except IOError:
     tag = "tag"
     print(".ini not accessible, using provided vars here:" + server + user)
 
-
-
-
+# string to be attached to the server url on what to pull back from PRTG.
 search_payload = "content=devices&columns=objid,device,status,name,active,host,group,tags&filter_tags=@tag("+tag+")&username="+user+"&passhash="+password+""
 
+# headers
 headers = {'Content-Type': 'application/yang-data+json',
             'Accept': 'application/yang-data+json'}
 
+# beginning of API URL
 url = "https://"+server+"/api/table.json?"
 api_search_string = url + search_payload
 req = requests.get(api_search_string, params=search_payload, headers=headers, verify=False)
