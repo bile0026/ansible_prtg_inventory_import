@@ -57,7 +57,7 @@ jsonget = req.json()
 devices = jsonget["devices"]
 
 #print(jsonget.values())
-print(devices)
+#print(devices)
 
 for a in devices:
     print(a["host"]+" "+ a["name"])
