@@ -1,11 +1,13 @@
 # ansible_prtg_inventory_import
 import inventory into ansible from PRTG NMS
 
-NOT WORKING YET
-
 Uses the PRTG API: https://www.paessler.com/manuals/prtg/application_programming_interface_api_definition
 
-Need to create a .ini file in the same directory with your variables. You will need to create a user in PRTG with API permissions and a passhash. Using normal username and password does not work.
+You will need to create a user in PRTG with API permissions and a passhash. https://www.paessler.com/manuals/prtg/http_api
+
+Need to create a .ini file in the same directory as this script with your variables. Using normal username and password does not work. If you try and use hard coded variables you will have a very bad day and be chasing your tail.
+
+.ini format:
 ```
 [prtg]
 prtg_server = myserver
@@ -14,4 +16,4 @@ prtg_passhash = mypasshash
 prtg_tag = mytag
 ```
 
-If running in AWX, you can paste in the script file and update the connection vars in the beginning of the file so you don't have to include the .ini file.
+If running in AWX, use a "from project" source type when you create your inventory so you can pull from git or another location that will include your .ini file.
