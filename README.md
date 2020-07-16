@@ -17,3 +17,7 @@ prtg_tag = mytag
 ```
 
 If running in AWX, use a "from project" source type when you create your inventory so you can pull from git or another location that will include your .ini file.
+
+# To Do:
+* transform all host names to uppercase so things are consistent
+* possible regex for massaging host names to make sure they are in FQDN format
