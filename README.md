@@ -11,7 +11,7 @@ Need to create a .ini file in the same directory as this script with your variab
 ```
 [prtg]
 prtg_server = myserver
-prtg_user = myser
+prtg_user = myuser
 prtg_passhash = mypasshash
 prtg_tag = mytag
 ```
