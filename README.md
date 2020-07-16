@@ -11,3 +11,5 @@ prtg_user = myser
 prtg_passhash = mypasshash
 prtg_tag = mytag
 ```
+
+If running in AWX, you can paste in the script file and update the connection vars in the beginning of the file so you don't have to include the .ini file.
