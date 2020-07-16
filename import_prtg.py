@@ -106,6 +106,9 @@ class prtgInventory(object):
 
         # Inject data below to speed up script
         final_dict = {'_meta': {'hostvars': {}}}
+        #use the one below to overwrite an existing static inventory
+        #final_dict = {'_meta': {'hostvars': {}}, 'all': {'children': ['ungrouped']}}
+        #final_dict = {}
 
         # Loop hosts in groups and remove special chars from group names
         for m in hostsData['devices']:
@@ -113,17 +116,27 @@ class prtgInventory(object):
             if m["status"] == "Up":
                 # Allow Upper/lower letters and numbers. Replace everything else with underscore
                 m["name"] = self.clean_inventory_item(m["name"])
+                m["group"] = self.clean_group_name(m["group"])
                 if m["group"] in final_dict:
                     final_dict[m["group"]]['hosts'].append(m["name"])
                 else:
                     final_dict[m["group"]] = {'hosts': [m["name"]]}
+            # add groups to all
+            #m["group"]['children'].append(m["group"])
         return final_dict
 
-
+    # cleanup hostnames so they are proper
     @staticmethod
     def clean_inventory_item(item):
         # check for FQDN format, and replace anything else with underscore
-        item = re.sub('[^A-Za-z0-9]+\.[A-Za-z0-9]+\.[A-Za-z0-9]', '_', item)
+        item = re.sub('[^A-Za-z0-9\-\.]+', '_', item)
+        item = item.replace(" ","")
+        return item
+
+    # cleanup whitespace in group names
+    @staticmethod
+    def clean_group_name(item):
+        item = item.replace(" ", "_")
         return item
 
     # Empty inventory for testing.
