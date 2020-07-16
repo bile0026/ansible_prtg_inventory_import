@@ -59,55 +59,61 @@ devices = jsonget["devices"]
 #print(jsonget.values())
 #print(devices)
 
-for a in devices:
-    print(a["host"]+" "+ a["name"])
+# for a in devices:
+#     print(a["host"]+" "+ a["name"])
 
 use_groups = False
 
-# class prtgInventory(object):
-#     #CLI parameters
-#     def read_cli(self):
-#         parser = argparse.ArgumentParser()
-#         parser.add_argument('--host')
-#         parser.add_argument('--list', action='store_true')
-#         self.options = parser.parse_args()
+class prtgInventory(object):
+    #CLI parameters
+    def read_cli(self):
+        parser = argparse.ArgumentParser()
+        parser.add_argument('--host')
+        parser.add_argument('--list', action='store_true')
+        self.options = parser.parse_args()
 
-#     def __init__(self):
-#         self.inventory = {}
-#         self.read_cli_args()
+    def __init__(self):
+        self.inventory = {}
+        self.read_cli_args()
 
-#         # Called with `--list`.
-#         if self.args.list:
-#             self.inventory = self.get_list()
-#             if use_groups:
-#                 self.groups = self.get_groups()
-#                 self.add_groups_to_hosts(self.groups)
-#         # Called with `--host [hostname]`.
-#         elif self.args.host:
-#             # Not implemented, since we return _meta info `--list`.
-#             self.inventory = self.empty_inventory()
-#         # If no groups or vars are present, return empty inventory.
-#         else:
-#             self.inventory = self.empty_inventory()
+        # Called with `--list`.
+        if self.args.list:
+            print(self.inventory)
+            self.inventory = self.get_list()
+            if use_groups:
+                self.groups = self.get_groups()
+                self.add_groups_to_hosts(self.groups)
+        # Called with `--host [hostname]`.
+        elif self.args.host:
+            # Not implemented, since we return _meta info `--list`.
+            self.inventory = self.empty_inventory()
+        # If no groups or vars are present, return empty inventory.
+        else:
+            self.inventory = self.empty_inventory()
 
-#         print(json.dumps(self.inventory, indent=2))
+        print(json.dumps(self.inventory, indent=2))
 
-#     def get_list(self):
-#         hostsData = jsonget
-#         data_dump = eval(json.dumps(jsonget))
+    # get list
+    def get_list(self):
+        hostsData = jsonget
 
-#         # Inject data below to speed up script
-#         final_dict = {'_meta': {'hostvars': {}}}
+        # unsure if this is needed
+        # data_dump = eval(json.dumps(jsonget))
 
-#         # Loop hosts in groups and remove special chars from group names
-#         for m in data_dump['results']:
-#             # Allow Upper/lower letters and numbers. Replace everything else with underscore
-#             m[groupField] = self.clean_inventory_item(m[groupField])
-#             if m[groupField] in final_dict:
-#                 final_dict[m[groupField]]['hosts'].append(m[hostField])
-#             else:
-#                 final_dict[m[groupField]] = {'hosts': [m[hostField]]}
-#         return final_dict
+        # Inject data below to speed up script
+        final_dict = {'_meta': {'hostvars': {}}}
+
+        # Loop hosts in groups and remove special chars from group names
+        for m in hostsData['devices']:
+            # check for active/available devices and import those
+            if m["status"] == "Up":
+                # Allow Upper/lower letters and numbers. Replace everything else with underscore
+                m["name"] = self.clean_inventory_item(m["name"])
+                if m["group"] in final_dict:
+                    final_dict[m["group"]]['hosts'].append(m["name"])
+                else:
+                    final_dict[m["group"]] = {'hosts': [m["name"]]}
+        return final_dict
 
 #             #if self.args.groups:
 #     def get_groups(self):
@@ -132,21 +138,22 @@ use_groups = False
 #     def add_groups_to_hosts (self, groups):
 #         self.inventory.update(groups)
 
-#     @staticmethod
-#     def clean_inventory_item(item):
-#         item = re.sub('[^A-Za-z0-9]+', '_', item)
-#         return item
+    @staticmethod
+    def clean_inventory_item(item):
+        # check for FQDN format, and replace anything else with underscore
+        item = re.sub('[^A-Za-z0-9]+\.[A-Za-z0-9]+\.[A-Za-z0-9]', '_', item)
+        return item
 
-#     # Empty inventory for testing.
-#     def empty_inventory(self):
-#         return {'_meta': {'hostvars': {}}}
+    # Empty inventory for testing.
+    def empty_inventory(self):
+        return {'_meta': {'hostvars': {}}}
 
-#     # Read the command line args passed to the script.
-#     def read_cli_args(self):
-#         parser = argparse.ArgumentParser()
-#         parser.add_argument('--list', action='store_true')
-#         parser.add_argument('--host', action='store')
-#         self.args = parser.parse_args()
+    # Read the command line args passed to the script.
+    def read_cli_args(self):
+        parser = argparse.ArgumentParser()
+        parser.add_argument('--list', action='store_true')
+        parser.add_argument('--host', action='store')
+        self.args = parser.parse_args()
 
-# # Get the inventory.
-# prtgInventory()
+# Get the inventory.
+prtgInventory()
