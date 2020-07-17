@@ -43,24 +43,27 @@ groupField = 'GroupName'
 hostField = 'SysName'
 
 # string to be attached to the server url on what to pull back from PRTG.
-search_payload = "content=devices&columns=objid,device,status,name,active,host,group,tags&filter_tags=@tag("+tag+")&username="+user+"&passhash="+password+""
+search_payload = "content=devices&columns=objid,device,status,name,active,host,group,tags&filter_tags=@tag(" + \
+    tag+")&username="+user+"&passhash="+password+""
 
 # headers
 headers = {'Content-Type': 'application/yang-data+json',
-            'Accept': 'application/yang-data+json'}
+           'Accept': 'application/yang-data+json'}
 
 # beginning of API URL
 url = "https://"+server+"/api/table.json?"
 api_search_string = url + search_payload
-req = requests.get(api_search_string, params=search_payload, headers=headers, verify=False)
+req = requests.get(api_search_string, params=search_payload,
+                   headers=headers, verify=False)
 
 jsonget = req.json()
 devices = jsonget["devices"]
 
 #use_groups = False
 
+
 class prtgInventory(object):
-    #CLI parameters
+    # CLI parameters
     def read_cli(self):
         parser = argparse.ArgumentParser()
         parser.add_argument('--host')
@@ -96,7 +99,7 @@ class prtgInventory(object):
 
         # Inject data below to speed up script
         final_dict = {'_meta': {'hostvars': {}}}
-        #use the one below to overwrite an existing static inventory
+        # use the one below to overwrite an existing static inventory
         #final_dict = {'_meta': {'hostvars': {}}, 'all': {'children': ['ungrouped']}}
         #final_dict = {}
 
@@ -112,7 +115,7 @@ class prtgInventory(object):
                 else:
                     final_dict[m["group"]] = {'hosts': [m["name"]]}
             # add groups to all
-            #m["group"]['children'].append(m["group"])
+            # m["group"]['children'].append(m["group"])
         return final_dict
 
     # cleanup hostnames so they are proper
@@ -120,7 +123,7 @@ class prtgInventory(object):
     def clean_inventory_item(item):
         # check for FQDN format, and replace anything else with underscore
         item = re.sub('[^A-Za-z0-9\-\.]+', '_', item)
-        item = item.replace(" ","")
+        item = item.replace(" ", "")
         return item
 
     # cleanup whitespace in group names
@@ -139,6 +142,7 @@ class prtgInventory(object):
         parser.add_argument('--list', action='store_true')
         parser.add_argument('--host', action='store')
         self.args = parser.parse_args()
+
 
 # Get the inventory.
 prtgInventory()
