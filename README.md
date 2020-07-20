@@ -14,10 +14,20 @@ prtg_server = myserver
 prtg_user = myuser
 prtg_passhash = mypasshash
 prtg_tag = mytag
+prtg_domain = domain.com
 ```
 
 If running in AWX, use a "from project" source type when you create your inventory so you can pull from git or another location that will include your .ini file.
 
-# To Do:
-* transform all host names to uppercase so things are consistent
-* possible regex for massaging host names to make sure they are in FQDN format
+Regex host name cleanup can handle these various formats of hostnames (should be inclusive of most default naming schemes in PRTG):
+
+* HOST_NAME (host-name.example.com)
+* host-name.example.com
+* (host-name.example.com) host-name
+* HOST-NAME.example.COM (HOST-NAME) [Cisco Device]
+* (HOST-NAME.example.com) HOST-NAME
+* HOST-NAME (HOST-NAME.example.com)
+* 10.150.252.40
+* HOST-NAME.example.COM (host-name.example.com) [Cisco Device Cisco IOS]
+
+If a name isn't able to be formatted, it will import it as ```bad_name_delete_me```, so it's easy to identify and cleanup.
