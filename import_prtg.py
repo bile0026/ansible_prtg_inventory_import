@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 
-
 '''
 Custom dynamic inventory script for Ansible and PRTG, in Python.
 This was tested on Python 3.6.8, PRTG 16.1.21.1924, and Ansible  2.9.10.
@@ -41,7 +40,8 @@ tag = config.get('prtg', 'prtg_tag')
 domain = config.get('prtg', 'prtg_domain').lower()
 
 # string to be attached to the server url on what to pull back from PRTG.
-search_payload = "content=devices&columns=objid,device,status,name,active,host,group,tags&filter_tags=@tag("+tag+")&username="+user+"&passhash="+password+""
+search_payload = "content=devices&columns=objid,device,status,name,active,host,group,tags& \
+    filter_tags=@tag("+tag+")&username="+user+"&passhash="+password+""
 
 # headers
 headers = {'Content-Type': 'application/yang-data+json',
@@ -114,7 +114,6 @@ class prtgInventory(object):
         if result:
             return item
 
-
         # check for FQDN format, and replace anything else with underscore
         if domain.casefold() in item.casefold():
             # check for match that hostname is already in proper format
@@ -129,7 +128,6 @@ class prtgInventory(object):
                 result = re.match(r'.*([\(])([A-Za-z0-9\-\.]+\.[A-Za-z]+[^\)])', item)
                 if result:
                     # if hostname is in (), process the string and return it
-                    # try new regex below item = re.findall(r'(^.+[A-Za-z0-9\-\.]\.[A-Za-z]+)', item)
                     item = re.findall(r'(.+\(([A-Za-z0-9\-\.]+\.[A-Za-z]+[^\)]))', item)
                     item = item[0][1]
                     #check if valid FQDN
@@ -155,7 +153,7 @@ class prtgInventory(object):
             if result:
                 return item.upper()
             else:
-                return "bad_hostname_delete_me"
+                return "bad_hostname_delete_me_" + item
                 print(item + " is not a proper FQDN hostname")
 
     @staticmethod
